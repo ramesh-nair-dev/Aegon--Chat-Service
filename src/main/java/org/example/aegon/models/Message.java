@@ -1,0 +1,39 @@
+package org.example.aegon.models;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Message extends BaseClass {
+
+    @Column(nullable = false)
+    private String senderId;
+
+    @Column(nullable = false)
+    private String receiverId;
+
+    @Column(nullable = false, length = 2000)
+    private String content;
+
+    protected Message() {
+        // JPA only
+    }
+
+    public Message(String senderId, String receiverId, String content) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.content = content;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
