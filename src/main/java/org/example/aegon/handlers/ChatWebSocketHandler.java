@@ -10,7 +10,10 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,6 +46,24 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         if ("REGISTER".equals(type)) {
             String userId = jsonNode.get("userId").asText();
             sessions.put(userId, session);
+
+            List<Message> pending =
+                    messageRepository.findByReceiverIdAndDeliveredAtIsNullOrderByCreatedAt(userId);
+
+            for (Message msg : pending) {
+                ObjectNode delivery = objectMapper.createObjectNode();
+                delivery.put("type", "DELIVER");
+                delivery.set("data", objectMapper.valueToTree(msg));
+
+                session.sendMessage(
+                        new TextMessage(objectMapper.writeValueAsString(delivery))
+                );
+
+                msg.markDelivered(LocalDateTime.now()); // sets deliveredAt = now
+                messageRepository.save(msg);
+            }
+
+
             return;
         }
 

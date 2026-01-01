@@ -3,6 +3,9 @@ package org.example.aegon.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 public class Message extends BaseClass {
 
@@ -14,6 +17,9 @@ public class Message extends BaseClass {
 
     @Column(nullable = false, length = 2000)
     private String content;
+
+    @Column
+    private LocalDateTime deliveredAt;
 
     protected Message() {
         // JPA only
@@ -35,5 +41,9 @@ public class Message extends BaseClass {
 
     public String getContent() {
         return content;
+    }
+
+    public void markDelivered(LocalDateTime time) {
+        this.deliveredAt = time;
     }
 }
