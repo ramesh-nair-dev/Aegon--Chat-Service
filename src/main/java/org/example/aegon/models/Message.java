@@ -21,6 +21,18 @@ public class Message extends BaseClass {
     @Column
     private LocalDateTime deliveredAt;
 
+    public LocalDateTime getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public LocalDateTime getReadAt() {
+        return readAt;
+    }
+
+    @Column
+    private LocalDateTime readAt;
+
+
     protected Message() {
         // JPA only
     }
@@ -45,5 +57,9 @@ public class Message extends BaseClass {
 
     public void markDelivered(LocalDateTime time) {
         this.deliveredAt = time;
+    }
+
+    public void markRead(LocalDateTime now) {
+        this.readAt = now;
     }
 }
